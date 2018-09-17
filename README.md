@@ -1,3 +1,6 @@
+### Bug fixed added additional Dns.txt entries. (Original is no longer maintained)
+
+
 README - dnsenum.pl VERSION: 1.2.4
 
 multithreaded perl script to enumerate DNS information of a domain
@@ -59,7 +62,7 @@ perl -MCPAN -e shell
 
 and then type: install <MODULE>
  eg:
-cpan[1]> install XML::Writer
+cpan[1]> install XML::Writer Net::Netmask XML::Writer
 
   Perl ithreads support:
 	perl version must be compliled with ithreads support.
