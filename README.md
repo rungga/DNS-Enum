@@ -14,7 +14,7 @@ OPERATIONS:
 	4) Perform axfr queries on nameservers and get BIND VERSION (threaded).
 
 	5) Get extra names and subdomains via google scraping
-	   (google query = "allinurl: -www site:domain").
+	   (google query = "-www site:domain").
 
 	6) Brute force subdomains from file, can also perform recursion
 	   on subdomain that have NS records (all threaded).
