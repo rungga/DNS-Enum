@@ -8,7 +8,7 @@ centos: yum install cpan
 
 ##Then:
 
-root@kali:~# cpanm String::Random
+root@kali:~# cpanm String::Random Net::Netmask XML::Writer
 --> Working on String::Random
 Fetching http://www.cpan.org/authors/id/S/SH/SHLOMIF/String-Random-0.25.tar.gz .
 .. OK

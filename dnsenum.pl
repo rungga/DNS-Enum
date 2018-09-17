@@ -2,18 +2,18 @@
 #
 #
 #	dnsenum.pl VERSION 1.2.4
-#	This version:	- changed version number to the correct one		
-#		
+#	This version:	- changed version number to the correct one
+#
 #	dnsenum.pl: multithread script to enumerate information on
 #		a domain and to discover non-contiguous ip blocks.
-#	
+#
 #	1) Get the host's addresse.
 #	2) Get the nameservers (threaded).
 #	3) get the MX record (threaded).
 #	4) Perform axfr queries on nameservers (threaded).
 #	5) Get extra names via google scraping.
 #	6) Brute force subdomains from file (threaded).
-#	7) Calculate C class domain network ranges and perform whois 
+#	7) Calculate C class domain network ranges and perform whois
 #		queries on them (threaded).
 #	8) Perform reverse lookups on C class or/and whois
 #		network ranges (threaded).
@@ -48,6 +48,7 @@
 
 use strict;
 use warnings;#it complains about uninitialized values when it doesn't find address in RR; need to fix later
+no if $] >= 5.018, 'warnings', "experimental::smartmatch"; # Mute Experimental Warning
 use Config;
 use Term::ANSIColor;
 use Getopt::Long;
@@ -84,7 +85,7 @@ BEGIN {
 		eval("	use threads;
 			use threads::shared;
 			use Thread::Queue;
-		");		
+		");
 		$ithreads_support = 1 unless $@;
 	}
 }
@@ -122,14 +123,14 @@ GetOptions (	'dnsserver=s'	=>	\$dnsserver,
 		'u|update=s'	=>	\$update,
 		'v|verbose'	=>	\$verbose,
 		'w|whois'	=>	\$whois,
-		'o|out=s'	=>	\$output);
+		'o|output=s'	=>	\$output); # Documentation Says Output not Out
 
 usage() if $help || @ARGV == 0;
 
 $domain = lc $ARGV[0];
 $fileips = $domain.'_ips.txt';
 
-#DEFAULT options --threads 5 -s 15 -w 
+#DEFAULT options --threads 5 -s 15 -w
 if ($enum) {
 	$threads = 5;
 	$scrap = 15;# Google scraping default to 15 to avoid Google Blocking us with captcha's
@@ -148,14 +149,14 @@ if ($threads) {
 	else {
 		#to handle different ips that belongs to the domain
 		share(@results);
-		
+
 		#number of ips that will be queried in reverse lookup
 		share($ipcount);
 
 		#number of valid ips (taken from reverse lookup responses)
-		share($ipvalid); 
+		share($ipvalid);
 
-		#will contain all valid subdomains 
+		#will contain all valid subdomains
 		share(%allsubs);
 
 		if ($recursion) {
@@ -247,25 +248,25 @@ my $wildcardpacket=$res->query($wildcards.".".$domain);
 if ($wildcardpacket) {
 	printheader ("Wildcard detection using: ".$wildcards."\n");
 	foreach my $rr ($wildcardpacket->answer) {
-		
+
 		if ($rr->type eq 'A')
 		{
 		printrr($rr->string);
 		#wildcardaddress will hold the IP that's used as a string
-		my @wcheck= split('\s+',$rr->string); 
+		my @wcheck= split('\s+',$rr->string);
 		push @wildcardaddress, $wcheck[4];
-			
+
 		}
 		if ($rr->type eq 'CNAME')
 		{
 		printrr($rr->string);
 		#wildcardcname will hold CNAME that's used as a string
-		my @wcheck= split('\s+',$rr->string); 
+		my @wcheck= split('\s+',$rr->string);
 		push @wildcardcname, $wcheck[4];
-		
+
 		}
 	}
-	
+
 	unless ($nocolor) {
 		print color 'bold red';
 	}
@@ -273,11 +274,11 @@ if ($wildcardpacket) {
 	print STDOUT " Wildcards detected, all subdomains will point to the same IP address\n";
 	print STDOUT " Omitting results containing ".join(', ', @wildcardaddress).".\n Maybe you are using OpenDNS servers.\n";
 	print "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
-	
+
 	unless ($nocolor) {
 		print color 'reset';
 	}
-	
+
 	#exit(1);#we don't exit when wildcards are detected, because we will miss existing hosts
 }
 
@@ -294,13 +295,13 @@ if ($packet) {
 		$nameservers{$rr->nsdname} = 1;
 	}
 
-	die " Error: can't continue no NS record for " , $domain ,"\n" 
+	die " Error: can't continue no NS record for " , $domain ,"\n"
 		unless %nameservers;
 
 	#read the A record from the additional section
 	if ($packet->header->arcount) {
 		my @remain = additionalrecord($packet, keys %nameservers);
-		#do nslookup on nameservers that are not present in the 
+		#do nslookup on nameservers that are not present in the
 		#additional section
 		launchqueries(\&nslookup, @remain)
 			if scalar @remain;
@@ -331,16 +332,16 @@ if ($packet) {
 				if scalar @remain;
 		}
 		else {
-			launchqueries(\&nslookup, @mxservers);	
+			launchqueries(\&nslookup, @mxservers);
 		}
 	}
-} 
+}
 elsif ($verbose) {
 	warn " ", $domain ," MX record query failed: ",
 		$res->errorstring, "\n";
 }
 
-# (4) perform zonetransfers on nameservers 
+# (4) perform zonetransfers on nameservers
 printheader ("Trying Zone Transfers and getting Bind Versions:\n");
 launchqueries(\&zonetransfer, keys %nameservers);
 
@@ -376,10 +377,10 @@ bruteforce('f');
 if ($update) {
 
 	if ($dns_tmp = IO::File->new_tmpfile()) {
-		if ($update eq 'z') {	
+		if ($update eq 'z') {
 			print $dns_tmp $_, "\n"
 				for uniq_hosts(grep {
-					$allsubs{$_} eq $update 
+					$allsubs{$_} eq $update
 					} keys %allsubs);
 		}
 		elsif ($update eq 'g') {
@@ -388,7 +389,7 @@ if ($update) {
 		}
 	}
 	else {
-		die "Error can't create a temporary file: $!, ". 
+		die "Error can't create a temporary file: $!, ".
 			"to update ", $dnsfile ," file\n";
 	}
 }
@@ -399,7 +400,7 @@ undef %googlesubs if %googlesubs;
 if ($recursion) {
 	if (%allsubs) {
 		printheader("Performing recursion:\n");
-		
+
 		print STDOUT "\n ---- Checking subdomains NS records ----\n";
 
 		#select subdomains that are able to recursion
@@ -430,8 +431,8 @@ if ($update && ($update eq 'a' || $update eq 'all')) {
 	#save ns and mx servers
 	my @tmp = keys %nameservers;
 	push @tmp, @mxservers if scalar @mxservers;
-	
-	print $dns_tmp $_, "\n" 
+
+	print $dns_tmp $_, "\n"
 		for uniq_hosts(grep { s/\.$domain// } @tmp);
 	print $dns_tmp $_, "\n" for uniq_hosts(keys %allsubs);
 }
@@ -445,13 +446,13 @@ if ($subfile) {
 
 		print $sub_tmp $_, "\n"
 			for grep { s/\.$domain// } keys %uniq;
-		
+
 		print $sub_tmp $_, "\n" for keys %allsubs;
 	}
 	else {
 		die "Error can't create a temporary file: $!, ".
-			" to save results to ", $subfile ," file\n"; 
-	}	
+			" to save results to ", $subfile ," file\n";
+	}
 }
 
 undef @mxservers;
@@ -466,7 +467,7 @@ unless ($noreverse) {
 
 	#to save all valid subdomains discovred in
 	#the reverse lookup process
-	$extend_r = 1 
+	$extend_r = 1
 		if ($update && ($update eq 'r' || $update eq 'a' ||
 			$update eq 'all')) || $subfile;
 	printheader("Performing reverse lookup on ".$ipcount." ip addresses:\n");
@@ -530,9 +531,9 @@ sub launchqueries {
 			$stream->enqueue(@_);
 			my $thrs = $threads;  #don't create unused threads
 			$thrs = scalar @_ if $threads > scalar @_;
-		
+
 			for (1 .. $thrs) {
-				threads->new($querytype, \$stream);	
+				threads->new($querytype, \$stream);
 			}
 			#wait all threads
 			foreach (threads->list) {
@@ -597,7 +598,7 @@ sub launchqueries {
 					for keys %allsubs;
 				}
 				undef %allsubs;
-			}	
+			}
 		}
 	}
 }
@@ -607,26 +608,26 @@ sub reverselookup {
 
 	my $stream = shift if $threads;
 
-	my $res = Net::DNS::Resolver->new(	
+	my $res = Net::DNS::Resolver->new(
 					tcp_timeout => $timeout,
 					udp_timeout => $timeout,
 					persistent_udp => 1);
-	
+
 	$res->nameservers(keys %nameservers);
 
-	while (defined(my $ip = $threads ? $$stream->dequeue_nb : shift)) { 
-		
+	while (defined(my $ip = $threads ? $$stream->dequeue_nb : shift)) {
+
 		my $query = $res->query($ip);
 		if ($query) {
-			foreach my $rr ( grep { $_->type eq 'PTR' } 
+			foreach my $rr ( grep { $_->type eq 'PTR' }
 				$query->answer) {
-				
+
 				#exclude non PTR types answers or unwanted hostnames
 				next if $exp && $rr->ptrdname =~ /$exp/;
-				 
+
 				if ($rr->ptrdname =~ /(.*)(\.$domain$)/i) {
 
-					$allsubs{$1} = 1 
+					$allsubs{$1} = 1
 					if $extend_r && !$allsubs{$1};
 
 					#to calculate last valid ip blocks
@@ -641,7 +642,7 @@ sub reverselookup {
 				elsif ($verbose) {
 					printrr($rr->string);
 					xml_host($rr);
-				}	
+				}
 			}
 		}
 		#this part is just to check progress
@@ -653,7 +654,7 @@ sub reverselookup {
 
 sub xml_host {
     if(defined $output) {
-        my $rr = shift; 
+        my $rr = shift;
         my $ip;
         if($rr->type eq 'A') {
             $ip = $rr->address;
@@ -687,11 +688,11 @@ sub nslookup {
 						persistent_udp => 1,
 						dnsrch => 0);
 	$res->nameservers($dnsserver) if $dnsserver;
-	
+
 	while (defined(my $host = $threads ? $$stream->dequeue_nb : shift)) {
 
 		my $query = $res->search($host);
-		
+
 		if ($query) {
 			foreach my $rr ($query->answer) {
 				##we only print / add the result if it doesn't match the wildcardaddress
@@ -702,7 +703,7 @@ sub nslookup {
 
 				#check if it match the domain
 				if ($rr->name =~ /(.*)(\.$domain$)/i) {
-	
+
 					#save valid subdomains
 					if ($extend_b) {
 						$allsubs{$1} = 1
@@ -713,15 +714,15 @@ sub nslookup {
 						if $recur &&
 						!$recursubs{$1};
 					}
-					#save ip address 
+					#save ip address
 					push @results, $rr->address
 						if $rr->type eq 'A';
 				}
 				}
-				
+
  			}
 		}
-		
+
 		elsif ($verbose) {
 			warn "  ", $host ," A record query failed: ",
 				$res->errorstring, "\n";
@@ -752,7 +753,7 @@ sub selectsubdomains {
 				#print STDOUT "  ", $rr->string ,"\n";
 				printrr($rr->string);
 				xml_host($rr);
-					
+
 				if ($rr->name =~ /(.*)(\.$domain$)/i) {
 
 					if (!$allsubs{$1} ||
@@ -767,7 +768,7 @@ sub selectsubdomains {
 						#processed in a previous
 						#recursion levels
 						$allsubs{$1} = 'r';
-						
+
 						#select this subdomain
 						#for recursion
 						$recursubs{$rr->name} = 1;
@@ -777,8 +778,8 @@ sub selectsubdomains {
 					#ns servers for each domain or
 					#subdomain, this will be very
 					#useful in reverse lookup
-					
-					# --- begin --- 
+
+					# --- begin ---
 					#check if we already have this
 					#NS server
 					#next if $nameservers{$rr->nsdname};
@@ -786,7 +787,7 @@ sub selectsubdomains {
 					#$nameservers{$rr->nsdname} = 1;
 					#push @tmp, $rr->nsdname;
 					# --- end ---
-				}	
+				}
 			}
 
 			#perhaps for future additions to perform an extrem
@@ -799,8 +800,8 @@ sub selectsubdomains {
 			#if ($packet->header->arcount) {
 			#	@tmp = additionalrecord($packet,@tmp);
 			#	next unless scalar @tmp;
-			#}	
-			
+			#}
+
 			#foreach my $nshost (@tmp) {
 			#	$packet = $res->query($nshost);
 			#	if ($packet) {
@@ -839,12 +840,12 @@ sub zonetransfer {
 
 	while (defined(my $ns = $threads ? $$stream->dequeue_nb : shift)) {
 	  	$res->nameservers($ns);
-		
+
 		my @zone = $res->axfr($domain);
 		#my $version_query = $res->search("version.bind","TXT","CH");
 		print STDOUT "\nTrying Zone Transfer for ", $domain ,
 				" on ", $ns ," ... \n";
-		
+
 		if (@zone) {
 			foreach my $rr (@zone) {
 				#print all results
@@ -854,7 +855,7 @@ sub zonetransfer {
 				#save data if the record's domain name
 				#match the domain
 				if ($rr->name =~ /(.*)(\.$domain$)/i) {
-					
+
 					#save hostname
 					$allsubs{$1} = 'z'
 						unless $allsubs{$1};
@@ -876,7 +877,7 @@ sub zonetransfer {
 					# --- end ---
 				}
 			}
-		}	
+		}
 		else	{
 			warn "AXFR record query failed: ",
 				$res->errorstring, "\n";
@@ -884,14 +885,14 @@ sub zonetransfer {
 	}
 }
 
-#subroutine for scraping domains from google 
+#subroutine for scraping domains from google
 sub googlescraping {
 
 	my ($response, $browser, $form, $parser, $nextpage);
 	my ($count, $mypage) = (0,1);
-	my $query = qq[allinurl: -www site:$domain];
+	my $query = qq[-www site:$domain]; # Allinurl deprecated
 	my $nexturl = qq[/search?.*q=.*$domain.*start];
-	
+
 	#on errors the mech object will call die
 	$browser = WWW::Mechanize->new(	autocheck	=> 1,
 					stack_depth	=> 1,
@@ -906,7 +907,7 @@ sub googlescraping {
 
 	#get the first page
 	$response = $browser->get("http://www.google.com/ncr");
-	
+
 	$form = $browser->form_number(1)
 		or return;
 
@@ -925,13 +926,13 @@ sub googlescraping {
 
 					#end of parsing
 					#(we have enough subdomains)
-					$parser->eof 
+					$parser->eof
 						unless $count < $scrap;
 
 					return unless $attr->{href};
-							
+
 					#subdomains checks - if shit goes wrong with googlescraping it's prolly the regex
-					if ($attr->{href} =~    
+					if ($attr->{href} =~
 					/(\/url\?q\=http:\/\/)([\w\.-]+)(\.$domain\/)/) {
 
 						$allsubs{$2} = 'g'
@@ -945,11 +946,11 @@ sub googlescraping {
 					}
 					#the next page
 					elsif ($attr->{href} =~
-					/^$nexturl=$mypage\d.*/ && 
+					/^$nexturl=$mypage\d.*/ &&
 					!defined $nextpage) {
 						$nextpage = $attr->{href};
 					}
-				},'attr'] 
+				},'attr']
 			);
 
 		$parser->parse($response->decoded_content);
@@ -983,11 +984,11 @@ sub whoisip {
 		#search in the network blocks table to find
 		#if any of them contains the IP address
 		next if (findAllNetblock($ip, $table));
-		
+
 		#this is very useful on whois servers
 		#that limit the number of connections
 		sleep rand $delay;
-	
+
 		#catch different exceptions
 		#(on exceptions netrange will be a class C /24)
 		eval {
@@ -1006,12 +1007,12 @@ sub whoisip {
 				else {
 					$inetnum =~ s/\s//g;
 					$block = new2 Net::Netmask ($inetnum);
-				}	
+				}
 
 				if ($block) {
 
 					# this is useful when threads are enabled to eliminate
-					# the processing of same netranges 
+					# the processing of same netranges
 					next if $threads &&
 					$netranges{$block->desc};
 
@@ -1041,7 +1042,7 @@ sub whoisip {
 			}
 		};
 		if ($@) {
-			#catch any invalid results 
+			#catch any invalid results
 			#assume that the network range is a class C
 			print STDERR " Error: ", $@
 				if $verbose;
@@ -1053,16 +1054,16 @@ sub whoisip {
 		unless (defined $inetnum) {
 			$block = new Net::Netmask (qq[$ip/24]);
 			next if $threads && $netranges{$block->desc};
-				
+
 			$block->storeNetblock($table);
 			$netranges{$block->desc} = 1;
-			$ipcount += 256;	
+			$ipcount += 256;
 			printf STDOUT " c class default:   ".
 				"%-15s    ->      %s  ".
 				"    (whois netrange operation failed)\n",
 				$ip, $block->desc;
 		}
-	}	
+	}
 }
 
 #subroutine to brute force subdomains
@@ -1083,7 +1084,7 @@ sub bruteforce {
 		$recur = 1;
 
 		RECURSION:
-		$hosts = shift;	
+		$hosts = shift;
 
 		print STDOUT "\n ----   Recursion level ",
 				$level ,"   ---- \n";
@@ -1123,7 +1124,7 @@ sub bruteforce {
 
 		#select subdomains
 		printheader("Checking subdomains NS records:\n" );
-		
+
 		launchqueries(\&selectsubdomains,
 				map { $_ .= '.'.$domain } sort @tmp);
 
@@ -1135,9 +1136,9 @@ sub bruteforce {
 
 		@tmp = keys %recursubs;
 		undef %recursubs;
-		
+
 		$level++;
-		@_ = \@tmp; 
+		@_ = \@tmp;
 		goto RECURSION;
 	}
 	#brute force subdomains from dnsfile
@@ -1147,21 +1148,21 @@ sub bruteforce {
 			" exists and has a size greater than zero.\n"
 			unless -s $dnsfile;
 
-		my $input = new IO::File $dnsfile, "r" 
+		my $input = new IO::File $dnsfile, "r"
 			or die "Could not open ", $dnsfile ," file: $!\n";
 		while (<$input>) {
 			chomp;
-			
+
 			#save subdomains found in the file to use them
 			#in the recursion process
 			$filesubs{$_} = 1 if $recursion;
 
 			#select all subdomains that have not been listed
 			push @words, $_.'.'.$domain
-				unless $allsubs{$_};	
-		}	
+				unless $allsubs{$_};
+		}
 		$input->close;
-	
+
 		scalar @words ? launchqueries(\&nslookup, @words) :
 				print STDOUT " Can't find new subdomains.\n";
 		#the names have already been found by zonetransfer, ...
@@ -1171,7 +1172,7 @@ sub bruteforce {
 #subroutine to get the domain's network ranges
 sub networkranges {
 	my (@cnets, %ips, %seen);
-	
+
 	#uniq IP's
 	@ips{@_} = ();
 
@@ -1179,7 +1180,7 @@ sub networkranges {
 		my @octets = split /\./, $ip;
 
 		#private IP's
-		if ($octets[0] == 10 
+		if ($octets[0] == 10
 			|| $octets[0] == 127
 			|| ($octets[0] == 169 && $octets[1] == 254)
 			|| ($octets[0] == 172 && ($octets[1] > 15 &&
@@ -1199,7 +1200,7 @@ sub networkranges {
 			$seen{$net} = 1;
 			push @cnets, $net.".0";
 		}
-	}	
+	}
 
 	#launch whois queries on IP's to get the correct netranges
 	if ($whois) {
@@ -1208,13 +1209,13 @@ sub networkranges {
 		$SIG{__WARN__} = sub {} ;
 		launchqueries(\&whoisip, @cnets);
 		$SIG{__WARN__} = 'DEFAULT';
-		
-		printheader($domain ," whois netranges:\n");			
-		print STDOUT " ", $_ , "\n" for keys %netranges; 
+
+		printheader($domain ," whois netranges:\n");
+		print STDOUT " ", $_ , "\n" for keys %netranges;
 	}
 	#default class C netrange
 	else {
-		
+
 		printheader($domain." class C netranges:\n");
 		grep { $_ .= "/24"; print STDOUT " ",$_,"\n"; } @cnets;
 		$ipcount = scalar @cnets * 256;
@@ -1229,7 +1230,7 @@ sub networkranges {
 sub finalvalidips {
 
 	my $firstip = shift;
-	
+
 	#one single IP address
 	return $firstip."/32" unless scalar @_;
 
@@ -1237,8 +1238,8 @@ sub finalvalidips {
 	my $broadcast = $_[$#_];
 	my $tmpip = new Net::IP(qq[$firstip - $broadcast]);
 	foreach my $thisip (@_) {
-		# increment the previous tmp IP address to compare it with the current 
-		# IP address taken from the array 
+		# increment the previous tmp IP address to compare it with the current
+		# IP address taken from the array
 		++$tmpip;
 
 		if ($broadcast ne $thisip) {
@@ -1251,7 +1252,7 @@ sub finalvalidips {
 				defined $lastip ?
 				push @tmp, range2cidrlist($firstip, $lastip):
 				push @tmp, $firstip."/32";
-				
+
 				#update data
 				$firstip = $thisip;
 				$lastip = undef;
@@ -1265,7 +1266,7 @@ sub finalvalidips {
 				push @tmp,
 				range2cidrlist($firstip, $broadcast);
 			}
-			#this IP is the start of a new range 
+			#this IP is the start of a new range
 			else {
 				defined $lastip ?
 				push @tmp, range2cidrlist($firstip, $lastip):
@@ -1273,7 +1274,7 @@ sub finalvalidips {
 
 				#save the current new ip
 				push @tmp, $broadcast."/32";
-			}	
+			}
 		}
 	}
 	return @tmp;
@@ -1284,7 +1285,7 @@ sub finalvalidips {
 sub additionalrecord {
 
 	my ($packet, @servers, %seen) = @_;
-	
+
 	foreach my $rr (grep { $_->type eq 'A' } $packet->additional) {
 		foreach (grep {$_ eq $rr->name} @servers) {
 
@@ -1294,7 +1295,7 @@ sub additionalrecord {
 			push @results, $rr->address
 				if $rr->name =~ /$domain$/;
 
-		} 
+		}
 	}
 
 	#get the nameservers that have not been found in the additional section
@@ -1304,7 +1305,7 @@ sub additionalrecord {
 
 #subroutine to get uniq splited subdomains
 sub uniq_hosts {
-	my %uniq;	
+	my %uniq;
 	grep { !$uniq{$_} && $uniq{$_}++ for split /\./ } @_;
 	return keys %uniq;
 }
@@ -1314,7 +1315,7 @@ sub writetofile {
 	my $file = shift;
 	my $output = new IO::File $file, shift
 		or die "Could not open ", $file ," file: $!\n";
-	print $output $_, "\n" for @_;	
+	print $output $_, "\n" for @_;
 	$output->close;
 }
 
@@ -1322,7 +1323,7 @@ sub writetofile {
 sub cleanfile {
 
 	my ($file,$tmpfile,%uniq) = @_;
-	
+
 	seek($tmpfile,0,0)
 		or die "Error: seek failed on the temporary file: $!\n".
 			"can't update ", $file ,"\n";
@@ -1343,11 +1344,11 @@ sub cleanfile {
 #broken
 
 sub printrr {
-	
+
 	my $output = shift;
 	my @outputA = split('\s+',$output);
 	printf("%-40s %-8s %-5s %-8s %10s\n", $outputA[0], $outputA[1], $outputA[2], $outputA[3], $outputA[4]);
-	
+
 }
 sub printheader{
 	my ($header) = @_;
@@ -1362,8 +1363,8 @@ sub printheader{
 
 #the usage subroutine
 sub usage {
-	print STDOUT 
-qq{Usage: $program [Options] <domain> 
+	print STDOUT
+qq{Usage: $program [Options] <domain>
 [Options]:
 Note: the brute force -f switch is obligatory.
 GENERAL OPTIONS:
@@ -1379,7 +1380,7 @@ GENERAL OPTIONS:
   --threads <value>	The number of threads that will perform different queries.
   -v, --verbose		Be verbose: show all the progress and all the error messages.
 GOOGLE SCRAPING OPTIONS:
-  -p, --pages <value>	The number of google search pages to process when scraping names, 
+  -p, --pages <value>	The number of google search pages to process when scraping names,
 			the default is 5 pages, the -s switch must be specified.
   -s, --scrap <value>	The maximum number of subdomains that will be scraped from Google (default 15).
 BRUTE FORCE OPTIONS:
@@ -1754,7 +1755,7 @@ the License, or (at your option) any later version.
 
 =head1 SCRIPT CATEGORIES
 
-Networking 
+Networking
 DNS
 
 =cut
