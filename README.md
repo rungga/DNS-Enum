@@ -12,7 +12,7 @@ and to discover non-contiguous ip blocks.
 
 1) Get the host's addresse (A record).
 
-2) Get the namservers (threaded).
+2) Get the nameservers (threaded).
 
 3) Get the MX record (threaded).
 
