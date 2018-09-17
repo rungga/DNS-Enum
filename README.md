@@ -70,7 +70,7 @@ and then type: `cpanm <MODULE>` eg:
 ## USAGE:
 OPTIONS:`perldoc dnsenum.pl`
 
-
+## CHANGELOG
 Changelog from version 1.2.4
 - Additional DNS.txt entries
 - Fixed deprecated `allinurl`
