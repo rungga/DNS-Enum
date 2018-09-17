@@ -1,78 +1,80 @@
-### Bug fixed added additional Dns.txt entries. (Original is no longer maintained)
+# DNSENUM
+
+#### Bug fixes, added additional Dns.txt entries. (Original is no longer maintained)
 
 
-README - dnsenum.pl VERSION: 1.2.4
+README - dnsenum.pl VERSION: 1.2.5
 
 multithreaded perl script to enumerate DNS information of a domain
 and to discover non-contiguous ip blocks.
 
-OPERATIONS:
+## OPERATIONS:
 
-	1) Get the host's addresse (A record).
+1) Get the host's addresse (A record).
 
-	2) Get the namservers (threaded).
+2) Get the namservers (threaded).
 
-	3) Get the MX record (threaded).
+3) Get the MX record (threaded).
 
-	4) Perform axfr queries on nameservers and get BIND VERSION (threaded).
+4) Perform axfr queries on nameservers and get BIND VERSION (threaded).
 
-	5) Get extra names and subdomains via google scraping
-	   (google query = "-www site:domain").
+5) Get extra names and subdomains via google scraping
+   (google query = "-www site:domain").
 
-	6) Brute force subdomains from file, can also perform recursion
-	   on subdomain that have NS records (all threaded).
+6) Brute force subdomains from file, can also perform recursion
+   on subdomain that have NS records (all threaded).
 
-	7) Calculate C class domain network ranges and perform whois
-	   queries on them (threaded).
+7) Calculate C class domain network ranges and perform whois
+   queries on them (threaded).
 
-	8) Perform reverse lookups on netranges
-	   ( C class or/and whois netranges) (threaded).
+8) Perform reverse lookups on netranges
+   ( C class or/and whois netranges) (threaded).
 
-	9) Write to domain_ips.txt file ip-blocks.
+9) Write to domain_ips.txt file ip-blocks.
 
-Changelog from version 1.2.2
 
-- Fixed GoogleScraping
-- Fixed wildcard issues
-- Changed output function to get rid of errors with new Net::DNS version
-- A bit of cleanup here and there
-- Removed Bind Version detection
+## PREREQUISITES: 
+* Modules that are included in perl 5.10.0:
+	* Getopt::Long 
+	* IO::File 
+	* Thread::Queue
 
-PREREQUISITES: 
-
-  Modules that are included in perl 5.10.0:
-	Getopt::Long 
-	IO::File 
-	Thread::Queue
-
-  Other Necessary modules:
-	Must have:
-		Net::IP
-		Net::DNS 
-		Net::Netmask
-	Optional:
-		Net::Whois::IP
-		HTML::Parser
-		WWW::Mechanize
-		XML::Writer
+ * Other Necessary modules:
+	* Must have:
+		* Net::IP
+		* Net::DNS 
+		* Net::Netmask
+	* Optional:
+		* Net::Whois::IP
+		* HTML::Parser
+		* WWW::Mechanize
+		* XML::Writer
 		
+## INSTALLATION:
+
 To install a module, simply run (as root):
 
-perl -MCPAN -e shell
+* debian:	`apt-get install cpanminus`
+* centos: `yum install cpan`
+	`curl -L http://cpanmin.us | perl - App::cpanminus`
 
-and then type: install <MODULE>
- eg:
-cpan[1]> install XML::Writer Net::Netmask XML::Writer
+and then type: `cpanm <MODULE>` eg:
 
-  Perl ithreads support:
-	perl version must be compliled with ithreads support.
-	threads
-	threads::shared
+`cpanm install XML::Writer Net::Netmask XML::Writer Net::IP Net::DNS`
+
+ * Perl ithreads support:
+	* perl version must be compliled with ithreads support.
+	* threads
+	* threads::shared
+
+## USAGE:
+OPTIONS:`perldoc dnsenum.pl`
 
 
-OPTIONS: run "perldoc dnsenum.pl".
-
-
+Changelog from version 1.2.4
+- Additional DNS.txt entries
+- Fixed deprecated `allinurl`
+- Changed `out` to `output` as mentioned in the docs
 
 Special thanks to all Perl  developers.
 
