@@ -60,7 +60,7 @@ To install a module, simply run (as root):
 
 and then type: `cpanm <MODULE>` eg:
 
-`cpanm install XML::Writer Net::Netmask XML::Writer Net::IP Net::DNS`
+`cpanm install XML::Writer Net::Netmask Net::IP Net::DNS`
 
  * Perl ithreads support:
 	* perl version must be compliled with ithreads support.
