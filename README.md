@@ -3,7 +3,7 @@
 #### Bug fixes, added additional Dns.txt entries. (Original is no longer maintained)
 
 
-README - dnsenum2.pl VERSION: 1.2.5
+README - dnsenum2.pl VERSION: 1.2.6
 
 multithreaded perl script to enumerate DNS information of a domain
 and to discover non-contiguous ip blocks.
@@ -71,7 +71,7 @@ and then type: `cpanm <MODULE>` eg:
 OPTIONS:`perldoc dnsenum2.pl`
 
 ## CHANGELOG
-Changelog from version 1.2.4
+Changelog from version 1.2.6
 - Additional DNS.txt entries
 - Fixed deprecated `allinurl`
 - Changed `out` to `output` as mentioned in the docs
