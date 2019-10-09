@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 #
 #
-#	dnsenum2.pl VERSION 1.2.6
+#	dnsenum.pl VERSION 1.2.6
 #	This version:	- changed version number to the correct one
 #
-#	dnsenum2.pl: multithread script to enumerate information on
+#	dnsenum.pl: multithread script to enumerate information on
 #		a domain and to discover non-contiguous ip blocks.
 #
 #	1) Get the host's addresse.
@@ -45,7 +45,7 @@
 #
 #	Special thanks to all perl developers.
 #
-#	please see perldoc dnsenum2.pl for options and arguments
+#	please see perldoc dnsenum.pl for options and arguments
 
 use strict;
 use warnings
@@ -79,7 +79,7 @@ my ( $domain,  $recur,     $table,   $extend_b, $extend_r );
 my ( $timeout, $delay,     $pages,   $ipcount,  $ipvalid ) = ( 10, 3, 5, 0, 0 );
 my ($output);
 my $writer;
-my $program    = 'dnsenum2.pl';
+my $program    = 'dnsenum.pl';
 my $string_gen = String::Random->new;
 my $wildcards  = $string_gen->randpattern("cccccccccccc");
 my @wildcardaddress;
@@ -1490,15 +1490,15 @@ __END__
 
 =head1 NAME
 
-dnsenum2.pl: multithread script to enumerate information on a domain and to discover non-contiguous IP blocks.
+dnsenum.pl: multithread script to enumerate information on a domain and to discover non-contiguous IP blocks.
 
 =head1 VERSION
 
-dnsenum2.pl version 1.2.4
+dnsenum.pl version 1.2.6
 
 =head1 SYNOPSIS
 
-dnsenum2.pl [options] <domain> -f dns.txt
+dnsenum.pl [options] <domain> -f dns.txt
 
 =head1 DESCRIPTION
 
@@ -1599,7 +1599,7 @@ Write all valid subdomains to this file.
 
 The tcp and udp timeout values in seconds (default: 10s).
 
-=item B<--threads> B<<va
+=item B<--threads> B<<va>>
 
 
 The number of threads that will perform different queries.
@@ -1805,7 +1805,7 @@ google scraping and brute forcing).
 
 =head1 README
 
-dnsenum2.pl: multithread script to enumerate information on a domain
+dnsenum.pl: multithread script to enumerate information on a domain
 and to discover non-contiguous ip blocks.
 
 =head1 PREREQUISITES
