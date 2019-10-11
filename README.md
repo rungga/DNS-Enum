@@ -1,4 +1,5 @@
-# DNSENUM2
+# DNSENUM2  
+[![Rawsec's CyberSecurity Inventory](https://inventory.rawsec.ml/img/badges/Rawsec-inventoried-FF5050_flat.svg)](https://inventory.rawsec.ml/tools.html#Metasploit)
 
 README - dnsenum2.pl VERSION: 1.2.6
 
@@ -34,18 +35,18 @@ and to discover non-contiguous ip blocks.
 ###### Note: the make file will install these automatically.
 
 - Modules that are included in perl 5.10.0:
-  _ Getopt::Long
-  _ IO::File \* Thread::Queue
+  - Getopt::Long
+  - IO::File \* Thread::Queue
 
 - Other Necessary modules:
-  _ Must have:
-  _ Net::IP
-  _ Net::DNS
-  _ Net::Netmask
-  _ Optional:
-  _ Net::Whois::IP
-  _ HTML::Parser
-  _ WWW::Mechanize \* XML::Writer
+  - Must have:
+  - Net::IP
+  - Net::DNS
+  - Net::Netmask
+  - Optional:
+  - Net::Whois::IP
+  - HTML::Parser
+  - WWW::Mechanize \* XML::Writer
 
 ## INSTALLATION:
 
