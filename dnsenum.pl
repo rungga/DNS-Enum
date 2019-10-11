@@ -1458,7 +1458,8 @@ sub printheader {
 sub usage {
     print STDOUT qq{Usage: $program [Options] <domain>
 [Options]:
-Note: the brute force -f switch is obligatory.
+Note: If no -f tag supplied will default to /usr/share/dnsenum/dns.txt or
+the dns.txt file in the same directory as dnsenum.pl
 GENERAL OPTIONS:
   --dnsserver 	<server>
 			Use this DNS server for A, NS and MX queries.
@@ -1476,7 +1477,7 @@ GOOGLE SCRAPING OPTIONS:
 			the default is 5 pages, the -s switch must be specified.
   -s, --scrap <value>	The maximum number of subdomains that will be scraped from Google (default 15).
 BRUTE FORCE OPTIONS:
-  -f, --file <file>	Read subdomains from this file to perform brute force.
+  -f, --file <file>	Read subdomains from this file to perform brute force. (Takes priority over default dns.txt)
   -u, --update	<a|g|r|z>
 			Update the file specified with the -f switch with valid subdomains.
 	a (all)		Update using all results.
@@ -1565,7 +1566,7 @@ subdomain that have NS records (all threaded).
 
 =head1 OPTIONS
 
-The brute force -f switch is obligatory.
+The brute force -f switch takes priority over default dns.txt
 
 =head2 GENERAL OPTIONS:
 
