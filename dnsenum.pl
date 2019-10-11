@@ -62,6 +62,7 @@ use Net::DNS;
 use Net::Netmask;
 use XML::Writer;
 use Socket;
+use Cwd;
 use String::Random;
 
 my (
@@ -79,9 +80,10 @@ my ( $domain,  $recur,     $table,   $extend_b, $extend_r );
 my ( $timeout, $delay,     $pages,   $ipcount,  $ipvalid ) = ( 10, 3, 5, 0, 0 );
 my ($output);
 my $writer;
-my $program    = 'dnsenum.pl';
-my $string_gen = String::Random->new;
-my $wildcards  = $string_gen->randpattern("cccccccccccc");
+my $program     = 'dnsenum.pl';
+my $default_dir = '/usr/share/dnsenum/dns.txt';
+my $string_gen  = String::Random->new;
+my $wildcards   = $string_gen->randpattern("cccccccccccc");
 my @wildcardaddress;
 my @wildcardcname;
 my $VERSION = '1.2.6';
@@ -111,6 +113,7 @@ $html_support = 1 unless $@;
 eval("use XML::Writer;");
 $xml_support = 1 unless $@;
 
+$dnsfile = get_dns_list($default_dir);
 print STDOUT $program, " VERSION:", $VERSION, "\n";
 
 GetOptions(
@@ -226,7 +229,7 @@ $scrap = undef
   );
 
 $timeout = 10 if $timeout < 0 || $timeout > 128;
-$delay = 3 if $delay < 0;
+$delay   = 3  if $delay < 0;
 
 $update = undef if $update && !$dnsfile;
 unless ($nocolor) {
@@ -543,6 +546,15 @@ print STDOUT "\ndone.\n";
 exit(0);
 
 #--------------------------------------------------
+#Check if dns.txt file exists. Default on nonexistance
+#to local dns.txt
+sub get_dns_list {
+    my $default_dir = shift;
+    unless ( -f $default_dir ) {
+        $default_dir = getcwd() . '/dns.txt';
+    }
+    return $default_dir;
+}
 
 #subroutine that will launch different queries
 #(nslookup, zonetransfer, whoisip, reverselookup)
@@ -555,7 +567,7 @@ sub launchqueries {
         if ($threads) {
             my $stream = new Thread::Queue;
             $stream->enqueue(@_);
-            my $thrs = $threads;    #don't create unused threads
+            my $thrs = $threads;    #don')t create unused threads
             $thrs = scalar @_ if $threads > scalar @_;
 
             for ( 1 .. $thrs ) {
@@ -1391,7 +1403,7 @@ sub uniq_hosts {
 
 #subroutine to write valid subdomains to files
 sub writetofile {
-    my $file = shift;
+    my $file   = shift;
     my $output = new IO::File $file, shift
       or die "Could not open ", $file, " file: $!\n";
     print $output $_, "\n" for @_;
@@ -1424,7 +1436,7 @@ sub cleanfile {
 
 sub printrr {
 
-    my $output = shift;
+    my $output  = shift;
     my @outputA = split( '\s+', $output );
     printf( "%-40s %-8s %-5s %-8s %10s\n",
         $outputA[0], $outputA[1], $outputA[2], $outputA[3], $outputA[4] );
@@ -1826,7 +1838,7 @@ Filip Waeytens	<filip.waeytens[at]gmail.com>
 
 tix tixxDZ	<tixxdz[at]gmail.com>
 
-=head1 MAINTAINER 
+=head1 MAINTAINER
 
 Network Silence
 
