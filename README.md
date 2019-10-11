@@ -49,17 +49,17 @@ and to discover non-contiguous ip blocks.
 
 ## INSTALLATION:
 
-1. To install a module, simply run (as root):
+1.  To install a module, simply run (as root):
 
-- debian:`apt-get install cpanminus`
-- centos: `yum install cpan`
-- other:`curl -L http://cpanmin.us | perl - App::cpanminus`
+    - debian:`apt-get install cpanminus`
+    - centos: `yum install cpan`
+    - other:`curl -L http://cpanmin.us | perl - App::cpanminus`
 
-2. Run make file
-   `make install DESTDIR=/path/to/install`
+2.  Run make file
+    `make install DESTDIR=/path/to/install`
 
-- This will create a direct callable dnsenum file from commandline.
-- `dns.txt` file will be loaded from `/usr/share/dnsenum/dns.txt`. (Note the -f switch will take precedence over this file)
+    - This will create a direct callable `dnsenum` file from commandline.
+    - `dns.txt` file will be loaded from `/usr/share/dnsenum/dns.txt`. (Note the -f switch will take precedence over this file)
 
 ## ADDITIONAL INFORMATION:
 
