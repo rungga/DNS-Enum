@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 #
-#	dnsenum.pl VERSION 1.2.6
+#	dnsenum.pl VERSION 1.3.0
 #	This version:	- changed version number to the correct one
 #
 #	dnsenum.pl: multithread script to enumerate information on
@@ -1507,7 +1507,7 @@ dnsenum.pl: multithread script to enumerate information on a domain and to disco
 
 =head1 VERSION
 
-dnsenum.pl version 1.2.6
+dnsenum.pl version 1.3.0
 
 =head1 SYNOPSIS
 
@@ -1543,7 +1543,7 @@ Operations:
 =item
 
 5) Get extra names and subdomains via google scraping
-(google query = "allinurl: -www site:domain").
+(google query = "-www site:domain").
 
 =item
 
@@ -1638,7 +1638,7 @@ appended to domains that don't contain any dots.
 =over 3
 
 This function will scrap subdomains from google search,
-using query: allinurl: -www site:domain.
+using query: -www site:domain.
 
 =back
 
@@ -1823,7 +1823,7 @@ and to discover non-contiguous ip blocks.
 
 =head1 PREREQUISITES
 
-Modules that are included in perl 5.10.0:
+Modules that are included in perl 5.28.0:
   Getopt::Long, IO::File, Thread::Queue.
 
 Other Necessary modules:

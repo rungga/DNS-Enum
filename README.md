@@ -1,7 +1,8 @@
-# DNSENUM2  
+# DNSENUM2
+
 [![Rawsec's CyberSecurity Inventory](https://inventory.rawsec.ml/img/badges/Rawsec-inventoried-FF5050_flat.svg)](https://inventory.rawsec.ml/tools.html#dnsenum2)
 
-README - dnsenum2.pl VERSION: 1.2.6
+README - dnsenum2.pl VERSION: 1.3.0
 
 multithreaded perl script to enumerate DNS information of a domain
 and to discover non-contiguous ip blocks.
@@ -34,7 +35,8 @@ and to discover non-contiguous ip blocks.
 
 ###### Note: the make file will install these automatically.
 
-- Modules that are included in perl 5.10.0:
+- Modules that are included in perl 5.28.0:
+
   - Getopt::Long
   - IO::File \* Thread::Queue
 
@@ -57,7 +59,9 @@ and to discover non-contiguous ip blocks.
     - other:`curl -L http://cpanmin.us | perl - App::cpanminus`
 
 2.  Run make file
-    `make install DESTDIR=/path/to/install`
+
+    - `make`: Create Manpages
+    - `make install`: Install files in the correct folder
 
     - This will create a direct callable `dnsenum` file from commandline.
     - `dns.txt` file will be loaded from `/usr/share/dnsenum/dns.txt`. (Note the -f switch will take precedence over this file)
@@ -68,8 +72,9 @@ OPTIONS:`perldoc dnsenum.pl`
 
 ## CHANGELOG
 
-Changelog from version 1.2.6
+Changelog from version 1.3.0
 
+- Makefile addition
 - Dynamic DNS.txt reading
 - Additional DNS.txt entries
 - Fixed deprecated `allinurl`
