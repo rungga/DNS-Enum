@@ -38,17 +38,20 @@ and to discover non-contiguous ip blocks.
 - Modules that are included in perl 5.28.0:
 
   - Getopt::Long
-  - IO::File \* Thread::Queue
+  - IO::File
+  - Thread::Queue
 
 - Other Necessary modules:
   - Must have:
-  - Net::IP
-  - Net::DNS
-  - Net::Netmask
+    - Net::IP
+    - Net::DNS
+    - Net::Netmask
+    - String::Random
   - Optional:
-  - Net::Whois::IP
-  - HTML::Parser
-  - WWW::Mechanize \* XML::Writer
+    - Net::Whois::IP
+    - HTML::Parser
+    - WWW::Mechanize
+    - XML::Writer
 
 ## INSTALLATION:
 
