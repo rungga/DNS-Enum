@@ -218,6 +218,7 @@ attest-acc
 attest-test
 auditinternetresorerie
 australia
+autodiscover
 av
 avatar
 b-fast
@@ -393,6 +394,8 @@ deambachten
 deambachten-acc
 debtagency
 demadelief
+dev
+development
 developpement
 dfi
 di
@@ -1057,6 +1060,7 @@ ontwikkelings-samenwerking
 ontwikkelingssamenwerking
 onva
 onva-rjv
+origin
 osone
 ossom
 ossom-dosz
@@ -1166,7 +1170,9 @@ private-veilligheid
 privatesecurity
 privatesicherheit
 privateveilligheid
+prod
 prodcom
+production
 projects
 protectioncivile
 pub
@@ -1352,8 +1358,11 @@ ssc
 ssh
 staatsblad
 staatsrat
+stage
+staging
 starfighter
 statbel
+static
 stats
 stcw95
 stis
