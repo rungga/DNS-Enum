@@ -7,7 +7,7 @@
 #	dnsenum.pl: multithread script to enumerate information on
 #		a domain and to discover non-contiguous ip blocks.
 #
-#	1) Get the host's addresse.
+#	1) Get the host's address.
 #	2) Get the nameservers (threaded).
 #	3) get the MX record (threaded).
 #	4) Perform axfr queries on nameservers (threaded).
@@ -490,7 +490,7 @@ undef %netranges;
 # (8) perform reverse lookups on netranges (class C or whois netranges)
 unless ($noreverse) {
 
-    #to save all valid subdomains discovred in
+    #to save all valid subdomains discovered in
     #the reverse lookup process
     $extend_r = 1
       if (
@@ -847,7 +847,7 @@ sub selectsubdomains {
             }
 
             #perhaps for future additions to perform an extrem
-            #recursion to get the IP addresse of the NS servers
+            #recursion to get the IP address of the NS servers
 
             # --- begin ---
             #next unless scalar @tmp;
@@ -1484,11 +1484,11 @@ BRUTE FORCE OPTIONS:
 	g		Update using only google scraping results.
 	r		Update using only reverse lookup results.
 	z		Update using only zonetransfer results.
-  -r, --recursion	Recursion on subdomains, brute force all discovred subdomains that have an NS record.
+  -r, --recursion	Recursion on subdomains, brute force all discovered subdomains that have an NS record.
 WHOIS NETRANGE OPTIONS:
   -d, --delay <value>	The maximum value of seconds to wait between whois queries, the value is defined randomly, default: 3s.
   -w, --whois		Perform the whois queries on c class network ranges.
-			 **Warning**: this can generate very large netranges and it will take lot of time to performe reverse lookups.
+			 **Warning**: this can generate very large netranges and it will take lot of time to perform reverse lookups.
 REVERSE LOOKUP OPTIONS:
   -e, --exclude	<regexp>
 			Exclude PTR records that match the regexp expression from reverse lookup results, useful on invalid hostnames.
@@ -1503,7 +1503,7 @@ __END__
 
 =head1 NAME
 
-dnsenum.pl: multithread script to enumerate information on a domain and to discover non-contiguous IP blocks.
+dnsenum.pl -- multithread script to enumerate information on a domain and to discover non-contiguous IP blocks
 
 =head1 VERSION
 
@@ -1526,7 +1526,7 @@ Operations:
 
 =item
 
-1) Get the host's addresse (A record).
+1) Get the host's address (A record).
 
 =item
 
@@ -1682,7 +1682,7 @@ Read subdomains from this file to perform brute force.
 
 =item B<-u>,  B<--update> B<<a|g|r|z>>
 
-Update the file specified with the -f switch with vaild subdomains.
+Update the file specified with the -f switch with valid subdomains.
 
 =back
 
@@ -1706,7 +1706,7 @@ B<-u> z		Update using only zonetransfer results.
 
 =item B<-r>,  B<--recursion>
 
-Recursion on subdomains, brute force all discovred subdomains
+Recursion on subdomains, brute force all discovered subdomains
  that have an NS record.
 
 =back
@@ -1724,7 +1724,7 @@ not concerned.
 
 =head2 WHOIS IP OPTIONS:
 
-Perform whois ip queries on c class netanges discovred from
+Perform whois ip queries on c class netanges discovered from
 previous operations.
 
 =over
@@ -1755,7 +1755,7 @@ whois servers will limit the number of connections.
 
 Perform the whois queries on c class network ranges.
  B<Warning>: this can generate very large netranges and it
- will take lot of time to performe reverse lookups.
+ will take lot of time to perform reverse lookups.
 
 =back
 
@@ -1765,7 +1765,7 @@ Perform the whois queries on c class network ranges.
 
 B<NOTES:>
 The whois query should recursively query the various whois
-providers untile it gets the more detailed information including
+providers until it gets the more detailed information including
 either TechPhone or OrgTechPhone by default. See: perldoc Net::Whois::IP.
 On errors the netrange will be a default c class /24.
 
@@ -1796,7 +1796,7 @@ Verbose mode will show all results.
 
 =head1 OUTPUT FILES
 
-Final non-contiguous ip blocks are writen to domain_ips.txt file.
+Final non-contiguous ip blocks are written to domain_ips.txt file.
 
 B<NOTES:>
 Final non-contiguous ip blocks are calculated :
