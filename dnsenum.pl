@@ -196,11 +196,6 @@ if ( $whois && !defined $whois_support ) {
       . "whois queries disabled.\n";
     $whois = undef;
 }
-if ( $whois && !defined $whois_support ) {
-    warn "Warning: can't load Net::Whois::IP module, "
-      . "whois queries disabled.\n";
-    $whois = undef;
-}
 if ( $output && !defined $xml_support ) {
     warn "Warning: can't load XML::Writer module, " . "xml output disabled.\n";
     $output = undef;
