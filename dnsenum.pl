@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 #
-#	dnsenum.pl VERSION 1.3.0
+#	dnsenum.pl VERSION 1.3.1
 #	This version:	- changed version number to the correct one
 #
 #	dnsenum.pl: multithread script to enumerate information on
@@ -86,7 +86,7 @@ my $string_gen  = String::Random->new;
 my $wildcards   = $string_gen->randpattern("cccccccccccc");
 my @wildcardaddress;
 my @wildcardcname;
-my $VERSION = '1.2.6';
+my $VERSION = '1.3.1';
 
 #load threads modules (perl must be compiled with ithreads support)
 BEGIN {
@@ -1502,7 +1502,7 @@ dnsenum.pl -- multithread script to enumerate information on a domain and to dis
 
 =head1 VERSION
 
-dnsenum.pl version 1.3.0
+dnsenum.pl version 1.3.1
 
 =head1 SYNOPSIS
 
