@@ -2,7 +2,7 @@
 
 [![Rawsec's CyberSecurity Inventory](https://inventory.rawsec.ml/img/badges/Rawsec-inventoried-FF5050_flat.svg)](https://inventory.rawsec.ml/tools.html#dnsenum2)
 
-README - dnsenum2.pl VERSION: 1.3.0
+README - dnsenum2.pl VERSION: 1.3.1
 
 multithreaded perl script to enumerate DNS information of a domain
 and to discover non-contiguous ip blocks.
